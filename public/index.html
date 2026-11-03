@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="hu"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Értékelő űrlap</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'Source Sans 3',system-ui,sans-serif;background:#F3F6FA;color:#0A2F6B}
+input:focus,textarea:focus,button:focus-visible{outline:3px solid #7FB2F0;outline-offset:2px}
+input,textarea,button{font-family:inherit}
+a{color:#0B5CAD}a:hover{color:#0A2F6B}
+.page{min-height:100vh;display:flex;flex-direction:column}
+.wrap{max-width:1120px;margin:0 auto;padding:16px 24px}
+.card{background:#fff;border-radius:16px;box-shadow:0 8px 32px rgba(10,47,107,.12);padding:clamp(24px,4vw,48px);display:flex;flex-direction:column;gap:32px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:24px}
+.field{display:flex;flex-direction:column;gap:8px}
+label,legend{font-size:16px;font-weight:600}
+input[type=text],textarea{box-sizing:border-box;width:100%;padding:0 16px;font-size:18px;color:#0A2F6B;background:#fff;border:1.5px solid #6B7C96;border-radius:8px}
+input[type=text]{height:52px}
+textarea{min-height:180px;padding:14px 16px;line-height:1.5;resize:vertical}
+.err{font-size:14px;color:#B3261E;font-weight:600}
+.chip{min-height:44px;padding:0 20px;font-size:16px;font-weight:600;border-radius:22px;cursor:pointer;color:#0A2F6B;background:#fff;border:2px solid #6B7C96}
+.chip[aria-pressed=true]{color:#fff;background:#0B5CAD;border-color:#0B5CAD}
+.btn{height:52px;padding:0 32px;font-size:18px;font-weight:700;border-radius:26px;cursor:pointer;color:#fff;background:#0B5CAD;border:2px solid #0B5CAD}
+.btn.alt{color:#0B5CAD;background:#fff}
+dt{font-size:14px;font-weight:600;color:#4A5A73}
+dd{margin:4px 0 0;font-size:20px;font-weight:600}
+[hidden]{display:none!important}
+</style></head>
+<body>
+<div class="page">
+  <header style="background:#fff;border-bottom:1px solid #D5DEEA">
+    <div class="wrap" style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px">
+      <div style="display:flex;align-items:center;gap:12px">
+        <svg width="36" height="36" viewBox="0 0 36 36" aria-hidden="true"><rect width="36" height="36" rx="8" fill="#0A2F6B"/><path d="M9 25 L18 9 L27 25 Z" fill="none" stroke="#fff" stroke-width="2.5" stroke-linejoin="round"/></svg>
+        <span style="font-size:20px;font-weight:700">Értékelő rendszer</span>
+      </div>
+      <nav aria-label="Fő navigáció" style="display:flex;gap:24px;font-weight:600">
+        <a href="#urlap" style="text-decoration:none">Új értékelés</a>
+        <a href="#urlap" style="text-decoration:none">Súgó</a>
+      </nav>
+    </div>
+  </header>
+
+  <section style="background:#0A2F6B;color:#fff">
+    <div class="wrap" style="padding:64px 24px 112px;display:flex;flex-direction:column;gap:16px">
+      <span style="font-size:14px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#BCD3F2">Kollégák értékelése</span>
+      <h1 style="margin:0;font-size:clamp(32px,5vw,52px);line-height:1.1;max-width:720px">Új értékelés rögzítése</h1>
+      <p style="margin:0;font-size:20px;line-height:1.5;max-width:640px;color:#E3EDFA">Adja meg az értékelt kolléga adatait és tech stackjét, majd írja le szöveges értékelését.</p>
+    </div>
+  </section>
+
+  <main id="urlap" style="flex:1;max-width:1120px;width:100%;box-sizing:border-box;margin:-64px auto 0;padding:0 24px 64px">
+    <form id="form" class="card" novalidate>
+      <div>
+        <h2 style="margin:0 0 4px;font-size:28px">Az értékelt adatai</h2>
+        <p style="margin:0;color:#4A5A73">A *-gal jelölt mezők kitöltése kötelező.</p>
+      </div>
+      <div class="grid">
+        <div class="field">
+          <label for="nev">Név *</label>
+          <input id="nev" type="text" autocomplete="off" placeholder="Pl. Kovács Anna">
+          <span class="err" role="alert" hidden>Kérjük, adja meg az értékelt nevét.</span>
+        </div>
+        <div class="field">
+          <label for="titulus">Titulus *</label>
+          <input id="titulus" type="text" autocomplete="off" placeholder="Pl. Senior Java fejlesztő">
+          <span class="err" role="alert" hidden>Kérjük, adja meg a titulust.</span>
+        </div>
+      </div>
+      <fieldset style="border:0;margin:0;padding:0;min-width:0;display:flex;flex-direction:column;gap:12px">
+        <legend style="padding:0;margin-bottom:4px">Tech stack</legend>
+        <div id="chips" style="display:flex;flex-wrap:wrap;gap:8px"></div>
+        <div class="field" style="margin-top:8px">
+          <label for="egyeb">Egyéb technológiák</label>
+          <input id="egyeb" type="text" autocomplete="off" placeholder="Vesszővel elválasztva, pl. Go, Terraform">
+        </div>
+      </fieldset>
+      <div class="field">
+        <label for="ertekeles">Szöveges értékelés *</label>
+        <textarea id="ertekeles" rows="8" placeholder="Írja le tapasztalatait: szakmai tudás, együttműködés, önállóság, fejlődési lehetőségek."></textarea>
+        <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px">
+          <span class="err" role="alert" hidden>Kérjük, írjon szöveges értékelést.</span>
+          <span id="count" style="font-size:14px;color:#4A5A73;margin-left:auto">0 karakter</span>
+        </div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:16px;border-top:1px solid #D5DEEA;padding-top:24px">
+        <button type="submit" class="btn">Értékelés beküldése</button>
+        <button type="button" id="reset" class="btn alt">Törlés</button>
+      </div>
+    </form>
+
+    <section id="done" class="card" style="gap:24px" hidden>
+      <svg width="56" height="56" viewBox="0 0 56 56" aria-hidden="true"><circle cx="28" cy="28" r="28" fill="#0B5CAD"/><path d="M17 29 L25 37 L40 20" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <h2 style="margin:0;font-size:32px">Az értékelés rögzítve</h2>
+      <dl style="margin:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr));gap:24px">
+        <div><dt>Név</dt><dd id="o-name"></dd></div>
+        <div><dt>Titulus</dt><dd id="o-title"></dd></div>
+        <div><dt>Tech stack</dt><dd id="o-stack"></dd></div>
+      </dl>
+      <div><dt>Szöveges értékelés</dt><p id="o-text" style="margin:4px 0 0;font-size:18px;line-height:1.6;white-space:pre-wrap"></p></div>
+      <div><button type="button" id="again" class="btn">Új értékelés</button></div>
+    </section>
+  </main>
+
+  <footer style="background:#0A2F6B;color:#E3EDFA"><div class="wrap" style="padding:24px;font-size:14px">Belső értékelő rendszer</div></footer>
+</div>
+
+<script>
+const STACK = ['Java','Kotlin','Spring Boot','C# / .NET','TypeScript','React','Angular','Python','SQL','Docker','Kubernetes','AWS','Azure','Git / CI-CD'];
+const $ = (id) => document.getElementById(id);
+const form = $('form'), done = $('done');
+const [nameEl, titleEl, textEl, otherEl] = ['nev','titulus','ertekeles','egyeb'].map($);
+const required = [nameEl, titleEl, textEl];
+
+STACK.forEach((label) => {
+  const b = document.createElement('button');
+  b.type = 'button'; b.className = 'chip'; b.textContent = label; b.setAttribute('aria-pressed', 'false');
+  b.onclick = () => b.setAttribute('aria-pressed', b.getAttribute('aria-pressed') !== 'true');
+  $('chips').append(b);
+});
+
+const showErr = (el, bad) => {
+  el.setAttribute('aria-invalid', bad);
+  el.parentElement.querySelector('.err').hidden = !bad;
+};
+required.forEach((el) => el.addEventListener('input', () => el.getAttribute('aria-invalid') === 'true' && showErr(el, !el.value.trim())));
+textEl.addEventListener('input', () => $('count').textContent = textEl.value.length + ' karakter');
+
+function reset() {
+  form.reset();
+  document.querySelectorAll('.chip').forEach((b) => b.setAttribute('aria-pressed', 'false'));
+  required.forEach((el) => showErr(el, false));
+  $('count').textContent = '0 karakter';
+  form.hidden = false; done.hidden = true;
+}
+$('reset').onclick = $('again').onclick = reset;
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const bad = required.filter((el) => { const b = !el.value.trim(); showErr(el, b); return b; });
+  if (bad.length) return bad[0].focus();
+  const data = {
+    name: nameEl.value.trim(),
+    title: titleEl.value.trim(),
+    stack: [...document.querySelectorAll('.chip[aria-pressed=true]')].map((b) => b.textContent)
+      .concat(otherEl.value.split(',').map((x) => x.trim()).filter(Boolean)),
+    text: textEl.value,
+  };
+  try {
+    const r = await fetch('/api/ertekeles', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+    if (!r.ok) throw new Error(r.status);
+  } catch { return alert('A beküldés nem sikerült, próbálja újra.'); }
+  $('o-name').textContent = data.name;
+  $('o-title').textContent = data.title;
+  $('o-stack').textContent = data.stack.join(', ') || '–';
+  $('o-text').textContent = data.text;
+  form.hidden = true; done.hidden = false;
+});
+</script>
+</body></html>
